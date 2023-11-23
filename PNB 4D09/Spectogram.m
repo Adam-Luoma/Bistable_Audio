@@ -1,9 +1,7 @@
 clear all
 close all
 
-DATA_DIR='C:\Users\Adam Luoma\OneDrive\Documents\McMaster\Fourth Year\PNB 4D09';
-
-[green_needle, fs]=audioread('green_needle.wav');
+[green_needle, fs]=audioread('Audio/green_needle.wav');
 
 window_size = 512; % Length of the window in samples
 overlap = round(0.5*window_size); % Overlap between windows in samples
@@ -19,9 +17,9 @@ ylabel('Frequency (Hz)');
 title('Green Needle Spectrogram');
 colorbar;
 
-saveas(gcf, 'green_needle_spectrogram.png');
+saveas(gcf, 'Figures/green_needle_spectrogram.png');
 
-[brain_storm, fs]=audioread('brain_storm.wav');
+[brain_storm, fs]=audioread('Audio/brain_storm.wav');
 
 window_size = 512; 
 overlap = round(0.5*window_size); 
@@ -37,9 +35,9 @@ ylabel('Frequency (Hz)');
 title('Brain Storm Spectrogram');
 colorbar;
 
-saveas(gcf, 'brain_storm_spectrogram.png');
+saveas(gcf, 'Figures/brain_storm_spectrogram.png');
 
-[bistable_words, fs]=audioread('bistable_words.wav');
+[bistable_words, fs]=audioread('Audio/bistable_words.wav');
 
 window_size = 512; 
 overlap = round(0.5*window_size); 
@@ -57,7 +55,7 @@ colorbar;
 
 ylim([0, 12000]);
 
-saveas(gcf, 'bistable_words_spectrogram.png');
+saveas(gcf, 'Figures/bistable_words_spectrogram.png');
 
 
 % should I run these cross correlations (values are tiny) temporally line

@@ -11,7 +11,7 @@ randomized_list = numbers(randperm(length(numbers)));
 
 %Initializing TDT machine
 
-%TDT = TDTRP('SimpleSounds.rcx', 'RZ6');
+%TDT = TDTRP('Stable_BS-GN.rcx', 'RZ6');
 
 %set status for running program (if 1 audio ran on computer, if 2 audio run
 %through RZ6)
@@ -60,7 +60,7 @@ try
     while iteration <= 6
         
         blockNumber = num2str(iteration);
-        textToDisplay = strcat('Block Number',blockNumber,'press any key to begin');
+        textToDisplay = strcat('Block Number ',blockNumber,', press any key to begin');
 
         % Display text on the screen
         Screen('FillRect', window, backgroundColor); % Fill the background color
@@ -88,8 +88,14 @@ try
             
             %Play audio depending on computer or through TDT
             if Status == 1
-                 index = num2str(randomized_list(i));
-                 name = strcat('Audio\BS_',index,'.wav');
+                 if i <= 4
+                     index = num2str(randomized_list(i));
+                     name = strcat('Audio/BS_',index,'.wav');
+                 elseif i > 4
+                     index = num2str(randomized_list(i-4));
+                     name = strcat('Audio/GN_',index,'.wav');
+                 end
+                 
                  Play_Audio(name);
     
             elseif Status == 2
@@ -101,6 +107,7 @@ try
             % Check for break condition after each play
             [~, ~, keyCode] = KbCheck;
             if keyCode(KbName('e'))
+                iteraton = 7
                 break; 
             end
         end

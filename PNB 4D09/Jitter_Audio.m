@@ -1,11 +1,29 @@
 clear all
 close all
 
-[audio, Fs]=audioread('green_needle.wav');
-[audio1, Fs]=audioread('green_needle.wav');
+%cutting the extra blip out of the audio
+filename = 'Audio/green_needle.wav';
+[y, fs]=audioread(filename);
+samples=[1,length(y)-(0.3*fs)];%replace 20 with the number of seconds you need to cut
+[y1,fs] = audioread(filename,samples);
+audiowrite('Audio/GN_Cut.wav',y1,fs);
 
-[audio, Fs]=audioread('brain_storm.wav');
-[audio1, Fs]=audioread('brain_storm.wav');
+%balancing the RMS of each stimuli
+[GN, Fs]=audioread('Audio/green_needle.wav');
+[BS, Fs]=audioread('Audio/brain_storm.wav');
+GN_rms = rms(GN);
+BS_rms = rms(BS);
+BS_new = (GN_rms/BS_rms)*BS;
+rms(BS_new);
+audiowrite('Audio/BS_balanced.wav',BS_new,Fs);
+
+
+%Creating Jitters
+[audio, Fs]=audioread('Audio/green_needle.wav');
+[audio1, Fs]=audioread('Audio/green_needle.wav');
+
+[audio, Fs]=audioread('Audio/brain_storm.wav');
+[audio1, Fs]=audioread('Audio/brain_storm.wav');
 
 rng(42);
 random_numbers = rand(1, 32); % create 40 random numbers (8 sets of 4 jitters between 5 stiumuli)
@@ -26,14 +44,14 @@ for i = 1:(size(zeros_matrix, 2))
         zeros_appending = zeros(int32(x(j)), 1); %creates int for number of zeros
         extended_audio = [audio; zeros_appending];   % appends those zeros and another interation of the stimuli
         extended_audio = [extended_audio; audio1];  
-        audiowrite('extend.wav', extended_audio, Fs);    % write & read in new version of longer audio
-        [audio, Fs]=audioread('extend.wav');
+        audiowrite('Audio/extend.wav', extended_audio, Fs);    % write & read in new version of longer audio
+        [audio, Fs]=audioread('Audio/extend.wav');
     end
     %[audio, Fs]=audioread('green_needle.wav');
-    [audio, fs]=audioread('brain_storm.wav');
+    [audio, fs]=audioread('Audio/brain_storm.wav');
 
     index = num2str(i)
-    name = strcat('BS_',index,'.wav')
+    name = strcat('Audio/BS_',index,'.wav')
     audiowrite(name, extended_audio, Fs);
 end   
 
