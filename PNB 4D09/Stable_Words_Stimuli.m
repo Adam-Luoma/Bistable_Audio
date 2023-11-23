@@ -3,15 +3,19 @@ sca;
 close all;
 clearvars;
 
-% Set the seed
-seed = 42; % Replace with your desired seed
+%Creating randomization of stimuli order
+seed = 42; 
 rng(seed);
-
-% Create a list with each number occurring 5 times
 numbers = repmat(1:8, 1, 5);
-
-% Shuffle the list
 randomized_list = numbers(randperm(length(numbers)));
+
+%Initializing TDT machine
+
+%TDT = TDTRP('SimpleSounds.rcx', 'RZ6');
+
+%set status for running program (if 1 audio ran on computer, if 2 audio run
+%through RZ6)
+Status = 1;
 
 try
     % Set up PsychToolbox
@@ -22,41 +26,85 @@ try
     screenNumber = max(Screen('Screens'));
     [window, windowRect] = PsychImaging('OpenWindow', screenNumber, [0 0 0]);
     
-    % Define colors
+    % Define colors & text
     white = WhiteIndex(window);
     black = BlackIndex(window);
-    
-    % Set text size
-    Screen('TextSize', window, 40);
-    
-    % Run the experiment
-    for i = 1:length(randomized_list)
-       
-        % Display fixation cross
-        DrawFormattedText(window, '+', 'center', 'center', white);
-        Screen('Flip', window);
-            
-        % Wait for 1 second
-        WaitSecs(1);
-            
-        % Clear the screen
-        Screen('Flip', window);
-            
-        % Wait for 500 milliseconds
-        WaitSecs(0.5);
-        
-        %find the audio file
-        index = num2str(randomized_list(i))
-        name = strcat('Audio\BS_',index,'.wav')
+    textSize = 40;
+    textColor = [255 255 255]; 
+    backgroundColor = [0 0 0]; 
+    font = 'Arial';
 
-        %Play Audio
-        Play_Audio(name)
-       
-        % Check for break condition after each play
-        [~, ~, keyCode] = KbCheck;
-        if keyCode(KbName('e'))
-            break; 
+    % Text to display
+    textToDisplay = 'Welcome to the experiment. Listen closely to the speaker. Press any Key to continue';
+
+    % Set text size
+    Screen('TextSize', window, textSize);
+    Screen('TextFont', window, font);
+    textBounds = Screen('TextBounds', window, textToDisplay);
+
+    % Calculate position to center the text
+    screenRect = Screen('Rect', window);
+    textX = (screenRect(3) - textBounds(3)) / 2;
+    textY = (screenRect(4) - textBounds(4)) / 2;
+
+    % Display text on the screen
+    Screen('FillRect', window, backgroundColor); % Fill the background color
+    Screen('DrawText', window, textToDisplay, textX, textY, textColor);
+    Screen('Flip', window);
+
+    % Wait for a key press to close the window
+    KbStrokeWait;
+    
+    iteration = 1;
+
+    while iteration <= 6
+        
+        blockNumber = num2str(iteration);
+        textToDisplay = strcat('Block Number',blockNumber,'press any key to begin');
+
+        % Display text on the screen
+        Screen('FillRect', window, backgroundColor); % Fill the background color
+        Screen('DrawText', window, textToDisplay, textX, textY, textColor);
+        Screen('Flip', window);
+
+        % Wait for a key press to close the window
+        KbStrokeWait;
+
+        % Run the experiment
+        for i = 1:40
+           
+            % Display fixation cross
+            DrawFormattedText(window, '+', 'center', 'center', white);
+            Screen('Flip', window);
+                
+            % Wait for 1 second
+            WaitSecs(1);
+                
+            % Clear the screen
+            Screen('Flip', window);
+                
+            % Wait for 500 milliseconds
+            WaitSecs(0.5);
+            
+            %Play audio depending on computer or through TDT
+            if Status == 1
+                 index = num2str(randomized_list(i));
+                 name = strcat('Audio\BS_',index,'.wav');
+                 Play_Audio(name);
+    
+            elseif Status == 2
+                TDT.SoftTrg(randomized_list(i));
+                WaitSecs(9);
+    
+            end
+    
+            % Check for break condition after each play
+            [~, ~, keyCode] = KbCheck;
+            if keyCode(KbName('e'))
+                break; 
+            end
         end
+        iteration = iteration + 1;
     end
     % Clear the screen and close PsychToolbox
     sca;
@@ -64,3 +112,6 @@ catch
     sca;
     psychrethrow(psychlasterror);
 end
+
+
+
