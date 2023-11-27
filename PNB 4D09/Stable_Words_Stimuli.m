@@ -3,14 +3,7 @@ sca;
 close all;
 clearvars;
 
-%Creating randomization of stimuli order
-seed = 42; 
-rng(seed);
-numbers = repmat(1:8, 1, 5);
-randomized_list = numbers(randperm(length(numbers)));
-
 %Initializing TDT machine
-
 %TDT = TDTRP('Stable_BS-GN.rcx', 'RZ6');
 
 %set status for running program (if 1 audio ran on computer, if 2 audio run
@@ -71,6 +64,11 @@ try
         KbStrokeWait;
 
         % Run the experiment
+
+        %Creating randomization of stimuli order 
+        numbers = repmat(1:2, 1, 20);
+        randomized_list = numbers(randperm(length(numbers)));
+
         for i = 1:40
            
             % Display fixation cross
@@ -88,11 +86,11 @@ try
             
             %Play audio depending on computer or through TDT
             if Status == 1
-                 if i <= 4
+                 if i <= 1
                      index = num2str(randomized_list(i));
                      name = strcat('Audio/BS_',index,'.wav');
-                 elseif i > 4
-                     index = num2str(randomized_list(i-4));
+                 elseif i > 1
+                     index = num2str(randomized_list(i));
                      name = strcat('Audio/GN_',index,'.wav');
                  end
                  
@@ -107,7 +105,7 @@ try
             % Check for break condition after each play
             [~, ~, keyCode] = KbCheck;
             if keyCode(KbName('e'))
-                iteraton = 7
+                iteration = 7
                 break; 
             end
         end
