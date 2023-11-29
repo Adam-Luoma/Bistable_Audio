@@ -10,6 +10,11 @@ clearvars;
 %through RZ6)
 Status = 1;
 
+%Creating randomization of stimuli order
+numbers = repmat(1:2, 6, 20);
+randomized_list = numbers(randperm(length(numbers)));
+
+
 try
     % Set up PsychToolbox
     PsychDefaultSetup(2);
@@ -64,11 +69,6 @@ try
         KbStrokeWait;
 
         % Run the experiment
-
-        %Creating randomization of stimuli order 
-        numbers = repmat(1:2, 1, 20);
-        randomized_list = numbers(randperm(length(numbers)));
-
         for i = 1:40
            
             % Display fixation cross

@@ -2,9 +2,9 @@ clear all
 close all
 
 %cutting the extra blip out of the audio
-filename = 'Audio/green_needle.wav';
+filename = 'Audio/brain_storm.wav';
 [y, fs]=audioread(filename);
-samples=[1,length(y)-(0.3*fs)];%replace 20 with the number of seconds you need to cut
+samples=[1,length(y)-(0.07*fs)];%replace 20 with the number of seconds you need to cut
 [y1,fs] = audioread(filename,samples);
 audiowrite('Audio/GN_Cut.wav',y1,fs);
 

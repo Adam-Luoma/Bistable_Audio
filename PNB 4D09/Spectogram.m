@@ -2,6 +2,7 @@ clear all
 close all
 
 [green_needle, fs]=audioread('Audio/green_needle.wav');
+green_needle(:,2) = []
 
 window_size = 512; % Length of the window in samples
 overlap = round(0.5*window_size); % Overlap between windows in samples
@@ -19,7 +20,9 @@ colorbar;
 
 saveas(gcf, 'Figures/green_needle_spectrogram.png');
 
+
 [brain_storm, fs]=audioread('Audio/brain_storm.wav');
+brain_storm(:,2) = []
 
 window_size = 512; 
 overlap = round(0.5*window_size); 
