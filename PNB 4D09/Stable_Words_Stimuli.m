@@ -9,10 +9,20 @@ clearvars;
 %set status for running program (if 1 audio ran on computer, if 2 audio run
 %through RZ6)
 Status = 1;
+SubjID = 1
 
-%Creating randomization of stimuli order
-numbers = repmat(1:2, 6, 20);
-randomized_list = numbers(randperm(length(numbers)));
+stimulus_order = zeros(6,40)
+
+%Creating randomization of stimuli order for each participant
+for i = 1:6
+    numbers = repmat(1:2, 1, 20);
+    randomized_list = numbers(randperm(length(numbers)));
+    stimulus_order(i,:) = randomized_list
+end
+
+Subj = num2str(SubjID);
+filename = strcat('Data/Subj',Subj,'_stim_presentation.csv')
+csvwrite(filename,stimulus_order)
 
 
 try
@@ -97,9 +107,8 @@ try
                  Play_Audio(name);
     
             elseif Status == 2
-                TDT.SoftTrg(randomized_list(i));
+                TDT.SoftTrg(stimulus_order(iteration,i));
                 WaitSecs(9);
-    
             end
     
             % Check for break condition after each play
